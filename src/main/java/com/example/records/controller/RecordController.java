@@ -56,6 +56,11 @@ public class RecordController {
         }
     }
 
+    @GetMapping("/api/records")
+    public ResponseEntity<List<RecordResponseDto>> getAllRecords() {
+        return ResponseEntity.ok(recordService.getAllRecords());
+    }
+
     @GetMapping("/api/records/{id}")
     public ResponseEntity<Map<String, Object>> getRecordById(@PathVariable Long id) {
         try {
