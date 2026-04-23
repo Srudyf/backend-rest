@@ -40,6 +40,22 @@ public class RecordController {
         return ResponseEntity.ok(response);
     }
     
+    @PostMapping("/api/records")
+    public ResponseEntity<Map<String, Object>> createRecord(@Valid @RequestBody RecordRequestDto requestDto) {
+        try {
+            RecordResponseDto created = recordService.createRecord(requestDto);
+            Map<String, Object> response = new HashMap<>();
+            response.put("name", created.getName());
+            response.put("message", created.getMessage());
+            response.put("note", created.getNote());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            logger.error("Failed to create record", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create record: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/api/records/{id}")
     public ResponseEntity<Map<String, Object>> getRecordById(@PathVariable Long id) {
         try {
