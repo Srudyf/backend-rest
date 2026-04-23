@@ -57,8 +57,17 @@ public class RecordController {
     }
 
     @GetMapping("/api/records")
-    public ResponseEntity<List<RecordResponseDto>> getAllRecords() {
-        return ResponseEntity.ok(recordService.getAllRecords());
+    public ResponseEntity<Map<String, Object>> getAllRecords() {
+        List<Map<String, Object>> records = recordService.getAllRecords().stream()
+                .map(r -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("name", r.getName());
+                    m.put("message", r.getMessage());
+                    m.put("note", r.getNote());
+                    return m;
+                })
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(Map.of("records", records));
     }
 
     @GetMapping("/api/records/{id}")
